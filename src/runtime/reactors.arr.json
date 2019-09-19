@@ -1,7 +1,6 @@
 {
   "requires": [
     { "import-type": "builtin", "name": "reactor-events" },
-    { "import-type": "builtin", "name": "valueskeleton" },
     { "import-type": "builtin", "name": "table" }
   ],
   "provides": {
@@ -13,9 +12,6 @@
       "Image": { "tag": "name",
                  "origin": { "import-type": "uri", "uri": "builtin://image" },
                  "name": "Image" },
-      "ValueSkeleton": { "tag": "name",
-                         "origin": { "import-type": "uri", "uri": "builtin://valueskeleton" },
-                         "name": "ValueSkeleton" },
       "Table": { "tag": "name",
                  "origin": { "import-type": "uri", "uri": "builtin://global" },
                  "name": "Table" }
@@ -53,8 +49,7 @@
         "get-trace": ["arrow", [], ["List", ["tid", "a"]]],
         "get-trace-as-table": ["arrow", [], "Any"],
         "react": ["arrow", [["local", "Event"]], "RofA"],
-        "is-stopped": ["arrow", [], "Boolean"],
-        "_output": ["arrow", [], "ValueSkeleton"]
+        "is-stopped": ["arrow", [], "Boolean"]
       }]
     }
   }
