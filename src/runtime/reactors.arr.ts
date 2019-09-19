@@ -19,6 +19,10 @@ export interface Reactor {
 }
 
 export interface Handlers {
+  "on-tick"?: (init: any) => any,
+  "on-mouse"?: (current: any, x: number, y: number, kind: string) => any,
+  "on-key"?: (current: any, key: string) => any,
+  "stop-when"?: (current: any) => boolean,
   "to-draw"?: (init: any) => any,
 }
 
