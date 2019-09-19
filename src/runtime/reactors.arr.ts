@@ -14,6 +14,9 @@ const DEFAULT_CLOSE = false;
 const DEFAULT_TITLE = "reactor";
 
 var externalInteractionHandler = null;
+function setInteract(newInteract) {
+  externalInteractionHandler = newInteract;
+}
 
 // TODO(alex): parameterize Reactor over init?
 export interface Reactor {
@@ -32,10 +35,6 @@ export interface Handlers {
   "on-key"?: (current: any, key: string) => any,
   "stop-when"?: (current: any) => boolean,
   "to-draw"?: (init: any) => any,
-}
-
-function setInteract(newInteract) {
-  externalInteractionHandler = newInteract;
 }
 
 function makeReactor(init: any, fields: object): Reactor {
