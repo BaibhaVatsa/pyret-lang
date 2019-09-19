@@ -1,7 +1,7 @@
 {
   "requires": [
     { "import-type": "builtin", "name": "reactor-events" },
-    { "import-type": "builtin", "name": "table" }
+    { "import-type": "builtin", "name": "tables" }
   ],
   "provides": {
     "shorthands": {
