@@ -1,13 +1,13 @@
-const reactorEvents = require("./reactor-events.arr.js");
-const tables = require("./tables.arr.js");;
-const reactorLib = undefined;
+const REACTOR_EVENTS = require("./reactor-events.arr.js");
+const TABLES = require("./tables.arr.js");;
+const REACTOR_LIB = undefined;
 
 // TODO(alex): Worry about value skeleton later
-const VSlib = undefined;
+const VS_LIB = undefined;
 
 const $ReactorBrand = {"names":false};
 
-const isEvent = reactorEvents["is-Event"];
+const isEvent = REACTOR_EVENTS["is-Event"];
 
 const DEFAULT_TICK = (1 / 28); // IN SECONDS
 const DEFAULT_CLOSE = false;
