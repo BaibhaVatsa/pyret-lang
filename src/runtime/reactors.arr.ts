@@ -15,6 +15,11 @@ var externalInteractionHandler = null;
 export interface Reactor {
   init: any,
   "get-value": () => any,
+  "draw": () => any,
+}
+
+export interface Handlers {
+  "to-draw"?: (init: any) => any,
 }
 
 function setInteract(newInteract) {
@@ -30,13 +35,23 @@ function makeReactor(init: any, fields: object): Reactor {
   return makeReactorRaw(init, handlerDict, false, []);
 }
 
-function makeReactorRaw(init: any, handlers: object, 
+function makeReactorRaw(init: any, handlers: Handlers, 
                         tracing: boolean, trace: any[]): Reactor {
   return {
     init: init,
 
     "get-value": function() {
       return init;
-    }
+    },
+
+    "draw": function() {
+      if (handlers["to-draw"] === undefined) {
+        throw "Cannot draw() because no to-draw was specified on this reactor";
+      }
+
+      let drawer = handlers["to-draw"];
+      return drawer(init);
+    },
+
   };
 }
