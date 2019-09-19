@@ -20,7 +20,7 @@ function setInteract(newInteract) {
 
 // TODO(alex): parameterize Reactor over init?
 export interface Reactor {
-  init: any,
+  state: { currentValue: any, [key: string]: any },
   title: string,
   "seconds-per-tick": number,
   "close-when-stop": boolean,
@@ -30,11 +30,11 @@ export interface Reactor {
 }
 
 export interface Handlers {
-  "on-tick"?: (init: any) => any,
+  "on-tick"?: (current: any) => any,
   "on-mouse"?: (current: any, x: number, y: number, kind: string) => any,
   "on-key"?: (current: any, key: string) => any,
   "stop-when"?: (current: any) => boolean,
-  "to-draw"?: (init: any) => any,
+  "to-draw"?: (current: any) => any,
 }
 
 function makeReactor(init: any, fields: object): Reactor {
@@ -48,14 +48,18 @@ function makeReactor(init: any, fields: object): Reactor {
 
 function makeReactorRaw(init: any, handlers: Handlers, 
                         tracing: boolean, trace: any[]): Reactor {
+
+  var stateObject = {
+    currentValue: init,
+  };
   return {
-    init: init,
+    state: stateObject,
     title: DEFAULT_TITLE,
     "seconds-per-tick": DEFAULT_TICK,
     "close-when-stop": DEFAULT_CLOSE,
 
     "get-value": function() {
-      return init;
+      return stateObject.currentValue;
     },
 
     "draw": function() {
