@@ -68,7 +68,7 @@ function makeReactorRaw(init: any, handlers: Handlers,
       }
 
       let drawer = handlers["to-draw"];
-      return drawer(init);
+      return drawer(stateObject.currentValue);
     },
 
   };
