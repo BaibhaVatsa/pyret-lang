@@ -502,6 +502,10 @@ function _rebind(toRebind: any): any {
 
 export function pauseStack(callback) {
   // @ts-ignore
+  if ($STOPIFY === undefined) {
+    throw "pauseStack not available without Stopify. A feature of a program (such as reactors) relies on Stopify to work.";
+  }
+  // @ts-ignore
   return $STOPIFY.pauseK(kontinue => {
     return callback({
       resume: (val) => kontinue({ type: "normal", value: val }),
