@@ -9,11 +9,19 @@ const $ReactorBrand = {"names":false};
 
 const isEvent = reactorEvents["is-Event"];
 
+const DEFAULT_TICK = (1 / 28); // IN SECONDS
+const DEFAULT_CLOSE = false;
+const DEFAULT_TITLE = "reactor";
+
 var externalInteractionHandler = null;
 
 // TODO(alex): parameterize Reactor over init?
 export interface Reactor {
   init: any,
+  title: string,
+  "seconds-per-tick": number,
+  "close-when-stop": boolean,
+
   "get-value": () => any,
   "draw": () => any,
 }
@@ -43,6 +51,9 @@ function makeReactorRaw(init: any, handlers: Handlers,
                         tracing: boolean, trace: any[]): Reactor {
   return {
     init: init,
+    title: DEFAULT_TITLE,
+    "seconds-per-tick": DEFAULT_TICK,
+    "close-when-stop": DEFAULT_CLOSE,
 
     "get-value": function() {
       return init;
