@@ -32,6 +32,7 @@ export interface Reactor {
   "draw": () => any,
 
   "react": (event: any) => any,
+  "is-stopped": () => boolean,
 }
 
 export interface Handlers {
