@@ -134,6 +134,21 @@ function makeReactorRaw(init: any, handlers: Handlers,
         }
 
       });
+    },
+
+    "is-stopped": function() {
+      if (handlers["stop-when"]) {
+        return handlers["stop-when"](stateObject.currentValue);
+
+        // TODO(alex): Call pauseStack?
+          /*
+        return RUNTIME.pauseStack(function(restarter) {
+          restarter.resume(handlers["stop-when"](stateObject.currentValue));
+        });
+           */
+      } else {
+        return false;
+      }
     }
 
   };
