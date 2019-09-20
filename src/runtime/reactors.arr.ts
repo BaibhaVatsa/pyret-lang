@@ -73,6 +73,7 @@ function makeReactorRaw(init: any, handlers: Handlers,
         throw "Cannot draw() because no to-draw was specified on this reactor";
       }
 
+      // TODO(alex): call pauseStack?
       let drawer = handlers["to-draw"];
       return drawer(stateObject.currentValue);
     },
