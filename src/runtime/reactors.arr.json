@@ -17,10 +17,10 @@
                  "name": "Table" }
     },
     "values": {
-      "make-reactor": ["forall", ["a"], ["arrow", ["a", "Any"], "RofA"]],
+      "make-reactor": ["forall", ["a"], ["arrow", [["tid", "a"], "Any"], "RofA"]],
       "keypress": ["arrow", ["String"], ["local", "Event"]],
-      "mouse": ["arrow", ["Number", "Number", "String"], ["local", "Event"]],
-      "time-tick": ["local", "Event"],
+      "mouse": ["arrow", ["Number", "Number", "String"], ["local", "ReactorEvent"]],
+      "time-tick": ["local", "ReactorEvent"],
 
       "get-value": ["forall", ["a"], ["arrow", ["RofA"], ["tid", "a"]]],
       "get-instance": ["forall", ["a"], ["arrow", ["RofA"], ["tid", "a"]]],
@@ -32,10 +32,9 @@
       "stop-trace": ["forall", ["a"], ["arrow", ["RofA"], "RofA"]],
       "get-trace": ["forall", ["a"], ["arrow", ["RofA"], ["List", ["tid", "a"]]]],
       "get-trace-as-table": ["forall", ["a"], ["arrow", ["RofA"], "Table"]],
-      "react": ["forall", ["a"], ["arrow", ["RofA", ["local", "Event"]], "RofA"]]
+      "react": ["forall", ["a"], ["arrow", ["RofA", ["local", "ReactorEvent"]], "RofA"]]
     },
     "aliases": {
-      "Event": "ReactorEvent",
       "Reactor": ["local", "Reactor"]
     },
     "datatypes": {
@@ -49,7 +48,7 @@
         "stop-trace": ["arrow", [], "RofA"],
         "get-trace": ["arrow", [], ["List", ["tid", "a"]]],
         "get-trace-as-table": ["arrow", [], "Any"],
-        "react": ["arrow", [["local", "Event"]], "RofA"],
+        "react": ["arrow", [["local", "ReactorEvent"]], "RofA"],
         "is-stopped": ["arrow", [], "Boolean"]
       }]
     }
