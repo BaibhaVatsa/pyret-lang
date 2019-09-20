@@ -17,6 +17,7 @@
                  "name": "Table" }
     },
     "values": {
+      "make-reactor": ["forall", ["a"], ["arrow", ["a", "Any"], "RofA"]],
       "keypress": ["arrow", ["String"], ["local", "Event"]],
       "mouse": ["arrow", ["Number", "Number", "String"], ["local", "Event"]],
       "time-tick": ["local", "Event"],
