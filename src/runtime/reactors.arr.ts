@@ -83,18 +83,16 @@ function makeReactorRaw(init: any, handlers: Handlers,
 
           // Execute the handler
           let handler = handlers[handlerName];
-          RUNTIME.pauseStack(function(restarter) {
-            let result = handler.apply(args);
-            let newTrace = null;
-            if (tracing) {
-              newTrace = trace.concat(result);
-            } else {
-              newTrace = trace;
-            }
+          let result = handler.apply(args);
+          let newTrace = null;
+          if (tracing) {
+            newTrace = trace.concat(result);
+          } else {
+            newTrace = trace;
+          }
 
-            let newReactor = makeReactorRaw(result, handlers, tracing, newTrace);
-            restarter.resume(result);
-          });
+          let newReactor = makeReactorRaw(result, handlers, tracing, newTrace);
+          return newReactor;
 
         } else {
           // No handler
@@ -103,7 +101,7 @@ function makeReactorRaw(init: any, handlers: Handlers,
       }
 
       // Main handler
-      RUNTIME.pauseStack(function(restarter) {
+      return RUNTIME.pauseStack(function(restarter) {
         let stop = false;
         if (handlers["stop-when"]) {
           stop = handlers["stop-when"](stateObject.currentValue);
