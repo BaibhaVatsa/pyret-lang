@@ -24,7 +24,6 @@ function setInteract(newInteract) {
 
 // TODO(alex): parameterize Reactor over init?
 export interface Reactor {
-  state: { currentValue: any, [key: string]: any },
   title: string,
   "seconds-per-tick": number,
   "close-when-stop": boolean,
@@ -55,17 +54,13 @@ function makeReactor(init: any, fields: object): Reactor {
 function makeReactorRaw(init: any, handlers: Handlers, 
                         tracing: boolean, trace: any[]): Reactor {
 
-  var stateObject = {
-    currentValue: init,
-  };
   return {
-    state: stateObject,
     title: DEFAULT_TITLE,
     "seconds-per-tick": DEFAULT_TICK,
     "close-when-stop": DEFAULT_CLOSE,
 
     "get-value": function() {
-      return stateObject.currentValue;
+      return init;
     },
 
     "draw": function() {
@@ -75,9 +70,11 @@ function makeReactorRaw(init: any, handlers: Handlers,
 
       // TODO(alex): call pauseStack?
       let drawer = handlers["to-draw"];
-      return drawer(stateObject.currentValue);
+      return drawer(init);
     },
 
+    // NO state changed
+    // A NEW reactor is created
     react: function(event: object): any {
       function callOrError(handlerName: string, args: any[]) {
         if (handlers[handlerName] === undefined) {
@@ -101,26 +98,26 @@ function makeReactorRaw(init: any, handlers: Handlers,
         }
       }
 
-      // Main handler
+      // Main dispatcher
       return RUNTIME.pauseStack(function(restarter) {
         let stop = false;
         if (handlers["stop-when"]) {
-          stop = handlers["stop-when"](stateObject.currentValue);
+          stop = handlers["stop-when"](init);
         }
 
         if (stop) {
-          restarter.resume(stateObject.currentValue);
+          restarter.resume(init);
         } else {
           if (isKeypress(event)) {
 
             let keyEvent = event;
             let key = keyEvent["key"];
-            restarter.resume(callOrError("on-key", [stateObject.currentValue, key]));
+            restarter.resume(callOrError("on-key", [init, key]));
 
           } else if (isTimeTick(event)) {
 
             let tickEvent = event;
-            restarter.resume(callOrError("on-tick", [stateObject.currentValue]));
+            restarter.resume(callOrError("on-tick", [init]));
 
           } else if (isMouse(event)) {
             let mouseEvent = event;
@@ -128,7 +125,7 @@ function makeReactorRaw(init: any, handlers: Handlers,
             let y = mouseEvent["y"];
             let kind = mouseEvent["kind"];
             restarter.resume(
-              callOrError("on-mouse", [stateObject.currentValue, x, y, kind]));
+              callOrError("on-mouse", [init, x, y, kind]));
           } else {
             restarter.error(new Error("Unknown event: " + event));
           }
@@ -139,7 +136,7 @@ function makeReactorRaw(init: any, handlers: Handlers,
 
     "is-stopped": function() {
       if (handlers["stop-when"]) {
-        return handlers["stop-when"](stateObject.currentValue);
+        return handlers["stop-when"](init);
 
         // TODO(alex): Call pauseStack?
           /*
