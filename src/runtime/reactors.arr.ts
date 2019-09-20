@@ -1,3 +1,4 @@
+const RUNTIME = require("./runtime.js");
 const REACTOR_EVENTS = require("./reactor-events.arr.js");
 const TABLES = require("./tables.arr.js");;
 const REACTOR_LIB = undefined;
@@ -8,6 +9,9 @@ const VS_LIB = undefined;
 const $ReactorBrand = {"names":false};
 
 const isEvent = REACTOR_EVENTS["is-Event"];
+const isKeypress = REACTOR_EVENTS["is-keypress"];
+const isMouse = REACTOR_EVENTS["is-mouse"];
+const isTimeTick = REACTOR_EVENTS["is-time-tick"];
 
 const DEFAULT_TICK = (1 / 28); // IN SECONDS
 const DEFAULT_CLOSE = false;
@@ -27,6 +31,8 @@ export interface Reactor {
 
   "get-value": () => any,
   "draw": () => any,
+
+  "react": (event: any) => any,
 }
 
 export interface Handlers {
@@ -70,6 +76,67 @@ function makeReactorRaw(init: any, handlers: Handlers,
       let drawer = handlers["to-draw"];
       return drawer(stateObject.currentValue);
     },
+
+    react: function(event: object): any {
+      function callOrError(handlerName: string, args: any[]) {
+        if (handlers[handlerName] === undefined) {
+
+          // Execute the handler
+          let handler = handlers[handlerName];
+          RUNTIME.pauseStack(function(restarter) {
+            let result = handler.apply(args);
+            let newTrace = null;
+            if (tracing) {
+              newTrace = trace.concat(result);
+            } else {
+              newTrace = trace;
+            }
+
+            let newReactor = makeReactorRaw(result, handlers, tracing, newTrace);
+            restarter.resume(result);
+          });
+
+        } else {
+          // No handler
+          throw new Error(`No ${handlerName} handler defined`);
+        }
+      }
+
+      // Main handler
+      RUNTIME.pauseStack(function(restarter) {
+        let stop = false;
+        if (handlers["stop-when"]) {
+          stop = handlers["stop-when"](stateObject.currentValue);
+        }
+
+        if (stop) {
+          restarter.resume(stateObject.currentValue);
+        } else {
+          if (isKeypress(event)) {
+
+            let keyEvent = event;
+            let key = keyEvent["key"];
+            restarter.resume(callOrError("on-key", [stateObject.currentValue, key]));
+
+          } else if (isTimeTick(event)) {
+
+            let tickEvent = event;
+            restarter.resume(callOrError("on-tick", [stateObject.currentValue]));
+
+          } else if (isMouse(event)) {
+            let mouseEvent = event;
+            let x = mouseEvent["x"];
+            let y = mouseEvent["y"];
+            let kind = mouseEvent["kind"];
+            restarter.resume(
+              callOrError("on-mouse", [stateObject.currentValue, x, y, kind]));
+          } else {
+            restarter.error(new Error("Unknown event: " + event));
+          }
+        }
+
+      });
+    }
 
   };
 }
