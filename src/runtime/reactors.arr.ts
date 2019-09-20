@@ -153,9 +153,30 @@ function makeReactorRaw(init: any, handlers: Handlers,
   };
 }
 
+function getValue(reactor: Reactor): any {
+  return reactor["get-value"]();
+}
+
+function draw(reactor: Reactor): any {
+  return reactor["draw"]();
+}
+
+function react(reactor: Reactor, event: any): any {
+  return reactor["react"](event);
+}
+
+function isStopped(reactor: Reactor): boolean {
+  return reactor["is-stopped"]();
+}
+
 module.exports = {
   "make-reactor": makeReactor,
   "mouse": REACTOR_EVENTS["mouse"],
   "keypress": REACTOR_EVENTS["keypress"],
   "time-tick": REACTOR_EVENTS["time-tick"],
+
+  "get-value": getValue,
+  "draw": draw,
+  "react": react,
+  "is-stopped": isStopped,
 };
