@@ -152,3 +152,10 @@ function makeReactorRaw(init: any, handlers: Handlers,
 
   };
 }
+
+module.exports = {
+  "make-reactor": makeReactor,
+  "mouse": REACTOR_EVENTS["mouse"],
+  "keypress": REACTOR_EVENTS["keypress"],
+  "time-tick": REACTOR_EVENTS["time-tick"],
+};
